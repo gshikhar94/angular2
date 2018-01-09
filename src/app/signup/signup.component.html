@@ -1,0 +1,9 @@
+<div class="container">
+  <span class="error"></span>
+
+  Phone Number: <input type="tel" #phone placeholder="Enter your phone number"><br><br>
+  Date of Birth: <input type="date" #dob placeholder="Enter your date of birth"><br><br>
+  Email : <input type="email" #email placeholder="Enter your username"><br><br>
+  Password: <input type="text"#password placeholder="Enter your password"><br><br>
+  <button (click)="signup(phone.value,dob.value,email.value,password.value)">Submit</button>
+</div>
