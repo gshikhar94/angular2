@@ -11,6 +11,11 @@ import { HttpModule } from '@angular/http';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { SignupComponent } from './signup/signup.component';
 import { AngularFireDatabase } from "angularfire2/database";
+import { BooksDetailComponent } from './books-detail/books-detail.component';
+import { BooksService } from './providers/books.service';
+import { BookIssuingComponent } from './book-issuing/book-issuing.component';
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { MatButtonModule,MatCheckboxModule,MatCardModule,MatListModule,MatInputModule} from "@angular/material";
 
 export const firebaseConfig = {
   apiKey: "AIzaSyD_bAKxXvW5xwQPrfdNuhOmRcifaBVs9IQ",
@@ -23,14 +28,19 @@ export const firebaseConfig = {
 const routes: Routes = [
   { path: '', component: HomePageComponent },
   { path: 'login', component: LoginPageComponent },
-  { path: 'signup', component: SignupComponent }
+  { path: 'signup', component: SignupComponent },
+  { path: 'bookDetails', component: BooksDetailComponent },
+  { path: "issue/:id", component: BookIssuingComponent }
 ];
 @NgModule({
   declarations: [
     AppComponent,
     LoginPageComponent,
     HomePageComponent,
-    SignupComponent
+    SignupComponent,
+    BooksDetailComponent,
+    BookIssuingComponent,
+
   ],
   imports: [
     BrowserModule,
@@ -38,9 +48,15 @@ const routes: Routes = [
     HttpModule,
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFireAuthModule,
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes),
+    BrowserAnimationsModule,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatCardModule,
+    MatListModule,
+    MatInputModule
   ],
-  providers: [AuthService,AngularFireDatabase],
+  providers: [AuthService, AngularFireDatabase, BooksService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

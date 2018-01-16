@@ -1,0 +1,47 @@
+<div class="header">
+  <h2>
+    My Books
+  </h2>
+</div>
+
+<form class="search-form">
+  <mat-form-field class="search-full-width">
+    <input matInput [(ngModel)]="searchValue" placeholder="Search" name="search" (keydown)="filterSearch(searchValue)">
+  </mat-form-field>
+</form>
+
+Category:
+<select [(ngModel)]="category" (change)="filterExact('category', category)">
+  <option value="technical">Technical</option>
+  <option value="fiction">Fiction</option>
+</select>
+
+<button mat-button *ngIf="category" (click)="removeFilter('category')">
+  Remove filter
+</button>
+
+Total Copies Greater Than
+<input type="number" [(ngModel)]="totalCopies" (keydown)="filterGreaterThan('totalCopies', totalCopies)">
+
+<button mat-button mat-button *ngIf="totalCopies" (click)="removeFilter('totalCopies')">
+  Remove filter
+</button>
+<!-- <md-content class="md-padding" layout-xs="column" layout="row"> -->
+<div *ngFor="let book of filteredBooks">
+  <mat-card>
+    <mat-card-title>
+      <h3>{{book.name}}</h3>
+    </mat-card-title>
+    <img [src]="book.imageUrl" alt="Smiley face" height="42" width="42">
+    <mat-list role="list">
+      <mat-list-item role="listitem">Name: {{book.name}}</mat-list-item>
+      <mat-list-item role="listitem">Author Name: {{book.authorName}}</mat-list-item>
+      <mat-list-item role="listitem">Category: {{book.category}}</mat-list-item>
+      <mat-list-item role="listitem">Total Copies: {{book.totalCopies}} copies</mat-list-item>
+      <mat-list-item role="listitem">Issued: {{book.issued}} copies</mat-list-item>
+      <mat-list-item role="listitem">Available Copies: {{book.totalCopies-book.issued}} copies</mat-list-item>
+
+    </mat-list>
+    <a routerLink="/issue/{{book.id}}">Issue</a>
+  </mat-card>
+</div>
