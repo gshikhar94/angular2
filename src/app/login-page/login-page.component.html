@@ -1,14 +1,12 @@
-<div class="container">
-  <div>
-    <h1>Login To Your Account</h1>
-    <button class="btn btn-default" (click)="loginWithGoogle()">Login With Google</button>
-    Email :
-    <input type="email" #email placeholder="Enter your username">
-    <br>
-    <br> Password:
-    <input type="text" #password placeholder="Enter your password">
-    <br>
-    <br>
-    <button (click)="login(email.value,password.value)">Submit</button>
-  </div>
-</div>
+
+
+  <p>Please login.</p>
+  <button (click)="loginWithGoogle()">Login with Google</button>
+  Email :
+  <input type="email" #email placeholder="Enter your username">
+  <br>
+  <br> Password:
+  <input type="text" #password placeholder="Enter your password">
+  <br>
+  <br>
+  <button (click)="login(email.value,password.value)">Submit</button>

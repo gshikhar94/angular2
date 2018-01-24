@@ -5,6 +5,10 @@ import { Observable } from "rxjs/Observable";
 import { AngularFireDatabase } from "angularfire2/database";
 import * as lodash from 'lodash';
 import { Subject } from "rxjs/Subject";
+import { ArrayObservable } from 'rxjs/observable/ArrayObservable';
+import { AuthService } from "../providers/auth.service";
+import { Users } from '../Users';
+import { FormControl } from '@angular/forms';
 @Component({
   selector: 'app-books-detail',
   templateUrl: './books-detail.component.html',
@@ -13,66 +17,46 @@ import { Subject } from "rxjs/Subject";
 export class BooksDetailComponent implements OnInit {
   books: Observable<book[]>;
   items: any;
-  constructor(public booksService: BooksService, public database: AngularFireDatabase) { }
-  filteredBooks: any;
-  /// filter-able properties
+  formControl = new FormControl();
+  categories=['Technical','Fiction','Non-Fiction'];
+
+  constructor(public booksService: BooksService, public database: AngularFireDatabase, public authService: AuthService) { }
+  filteredBooks: Observable<book[]>;
   category: string;
   totalCopies: number;
-  endangered: boolean;
   searchValue: string;
-
-
-
-
-  /// Active filter rules
-  filters = {}
+  name: any;
 
   ngOnInit() {
-    // this.getBooks();
+    this.getBooks();
     this.database.list('/Books').valueChanges().subscribe(books => {
-      this.items = books;
-      this.applyFilters();
+      books;
     })
   }
 
-
-  private applyFilters() {
-    this.filteredBooks = lodash.filter(this.items, lodash.conforms(this.filters))
-  }
-  /// filter property by equality to rule
-  filterExact(property: string, rule: any) {
-    this.filters[property] = val => val == rule
-    this.applyFilters()
-  }
-  /// filter  numbers greater than rule
-  filterGreaterThan(property: string, rule: number) {
-    this.filters[property] = val => val > rule
-    this.applyFilters()
-  }
-  /// filter properties that resolve to true
-  // filterBoolean(property: string, rule: boolean) {
-  //   if (!rule) this.removeFilter(property)
-  //   else {
-  //     this.filters[property] = val => val
-  //     this.applyFilters()
-  //   }
-  // }
-  /// removes filter
   removeFilter(property: string) {
-    delete this.filters[property]
-    this[property] = null
-    this.applyFilters()
+    this.filteredBooks = this.getBooks();
   }
   getBooks(): Observable<book[]> {
     this.books = this.booksService.getBooksDetail();
     return this.books;
   }
 
-  filterSearch(searchString: string) {
+  filterSearch(searchString: string, property: string) {
     console.log(searchString);
-    this.filteredBooks = this.getBooks().map(books => 
-      books.filter(book => 
-        book['name'].toLowerCase().indexOf(searchString.toLowerCase())));
-
+    this.filteredBooks = this.searchSomething(searchString, property);
   }
+
+  searchSomething(searchString: string, property: string) {
+    return this.getBooks()
+      .map(books =>
+        books.filter(book =>
+          book[property].toLowerCase().indexOf(searchString.toLowerCase()) >= 0
+        )
+      );
+  }
+  likes(id: number) {
+    this.booksService.likeBook(id);
+  }
+
 }

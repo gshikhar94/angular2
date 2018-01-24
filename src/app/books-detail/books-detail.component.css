@@ -1,16 +1,14 @@
 button{
-    background-color:darkgray;
 }
 img{
-    width: 60%;
-    length:70%;
-    float: unset;
+
 }
-mat-card{
-    width:30%;
-    length:60%;
-    background-color:rgb(218, 228, 236);
+.book-card{
+    width: 400px;
 }
 div.header{
    float: top;
+}
+.books{
+    display: flex
 }

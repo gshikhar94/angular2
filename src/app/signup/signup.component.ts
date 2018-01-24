@@ -33,8 +33,12 @@ export class SignupComponent implements OnInit {
     console.log(this.users.forEach((values) => { console.log(values) }));
 
     //This code is to push the object into the database
-    if (this.authDatabase.list('/Users').push(user)) {
-      console.log("Data has been added successfully");
+    var ref = this.authDatabase.list('/Users').push(user);
+    if (ref) {
+      console.log("Data has been added successfully" + ref.key);
+      ref.update({
+        id: ref.key
+      })
     }
 
   }

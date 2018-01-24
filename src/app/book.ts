@@ -6,4 +6,5 @@ export class book{
     issued:number;
     totalCopies:number; 
     category:string;
+    likes:number;
 }

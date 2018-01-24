@@ -21,5 +21,6 @@ export class BookIssuingComponent implements OnInit {
       console.log("Book selected with id" + id);
       this.bookService.issueBook(id);
     })
+    
   }
 }

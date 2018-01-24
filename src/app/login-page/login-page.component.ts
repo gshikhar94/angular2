@@ -13,14 +13,23 @@ export class LoginPageComponent implements OnInit {
 
   constructor(public authService: AuthService, private router: Router, public angularFireDatabase: AngularFireDatabase) { }
   ngOnInit() {
+    this.authService.getCurrentUserObservable().subscribe(user => {
+      if (user) {
+        this.authService.saveCurrentUser();
+        this.router.navigate(['/bookDetails']);
+      }
+    })
+
   }
   loginWithGoogle() {
     this.authService.loginWithGoogle().then((data) => {
       this.router.navigate(['/bookDetails']);
+
     })
   }
 
   login(email: string, password: string) {
     this.angularFireDatabase.list('/Users', ref => ref.orderByChild('userName').equalTo(email)).valueChanges().subscribe(data => console.log(data));
   }
+
 }

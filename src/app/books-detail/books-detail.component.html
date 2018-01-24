@@ -1,21 +1,28 @@
-<div class="header">
-  <h2>
-    My Books
-  </h2>
+<div *ngIf="authService.af.authState | async as user; else showLogin">
+  <h1>Hello {{ user.displayName }}!</h1>
+  <img [src]="user.photoURL" width=50px>
+  <button (click)="authService.logout()">Logout</button>
+ 
 </div>
+<mat-toolbar>My Books</mat-toolbar>
 
 <form class="search-form">
   <mat-form-field class="search-full-width">
-    <input matInput [(ngModel)]="searchValue" placeholder="Search" name="search" (keydown)="filterSearch(searchValue)">
+    <input matInput [(ngModel)]="searchValue" placeholder="Search" name="search" (keyup.enter)="filterSearch(searchValue,'name')">
   </mat-form-field>
 </form>
 
 Category:
-<select [(ngModel)]="category" (change)="filterExact('category', category)">
+<select [(ngModel)]="category" (change)="filterSearch( category,'category')">
   <option value="technical">Technical</option>
   <option value="fiction">Fiction</option>
-</select>
+</select> 
 
+<!-- <button mat-button [matMenuTriggerFor]="menu"  (change)="filterExact('category', category)">Menu</button>
+<mat-menu #menu="matMenu">
+  <button mat-menu-item>Technical</button>
+  <button mat-menu-item>Fiction</button>
+</mat-menu> -->
 <button mat-button *ngIf="category" (click)="removeFilter('category')">
   Remove filter
 </button>
@@ -26,22 +33,37 @@ Total Copies Greater Than
 <button mat-button mat-button *ngIf="totalCopies" (click)="removeFilter('totalCopies')">
   Remove filter
 </button>
-<!-- <md-content class="md-padding" layout-xs="column" layout="row"> -->
-<div *ngFor="let book of filteredBooks">
-  <mat-card>
-    <mat-card-title>
-      <h3>{{book.name}}</h3>
-    </mat-card-title>
-    <img [src]="book.imageUrl" alt="Smiley face" height="42" width="42">
-    <mat-list role="list">
-      <mat-list-item role="listitem">Name: {{book.name}}</mat-list-item>
-      <mat-list-item role="listitem">Author Name: {{book.authorName}}</mat-list-item>
-      <mat-list-item role="listitem">Category: {{book.category}}</mat-list-item>
-      <mat-list-item role="listitem">Total Copies: {{book.totalCopies}} copies</mat-list-item>
-      <mat-list-item role="listitem">Issued: {{book.issued}} copies</mat-list-item>
-      <mat-list-item role="listitem">Available Copies: {{book.totalCopies-book.issued}} copies</mat-list-item>
 
-    </mat-list>
-    <a routerLink="/issue/{{book.id}}">Issue</a>
+<mat-form-field>
+  <mat-select placeholder="Categories" [formControl]="formControl" [(ngModel)]="category" (change)="filterSearch( category,'category')" multiple>
+    <mat-option *ngFor="let category of categories" [value]="category" >{{category}}</mat-option>
+  </mat-select>
+</mat-form-field>
+
+
+<div class= "books" *ngFor="let book of filteredBooks|async">
+  <mat-card class="book-card">
+    <mat-card-header>
+    <mat-card-title><h3>{{book.name}}</h3></mat-card-title>
+    <mat-card-subtitle><h3>{{book.category}}</h3></mat-card-subtitle>
+  </mat-card-header>
+    <img mat-card-image [src]="book.imageUrl" alt="Smiley face" height="300" width="42">
+    <mat-card-content>
+      <mat-list role="list">
+        <mat-list-item role="listitem">Author Name: {{book.authorName}}</mat-list-item>
+        <mat-list-item role="listitem">Total Copies: {{book.totalCopies}} copies</mat-list-item>
+        <mat-list-item role="listitem">Issued: {{book.issued}} copies</mat-list-item>
+        <mat-list-item role="listitem">Available Copies: {{book.totalCopies-book.issued}} copies</mat-list-item>
+        <mat-list-item role="listitem"><mat-icon>love</mat-icon> {{book.likes}} likes</mat-list-item>
+      </mat-list>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <button color="primary" mat-raised-button (click)="likes(book.id)" [disabled]="">LIKE</button>
+      <button color="primary" mat-raised-button>SHARE</button>
+      <button color="accent" mat-raised-button routerLink="/issue/{{book.id}}" [disabled]="book.totalCopies==book.issued">Issue</button>
+      <div color="accent" mat-raised-div *ngIf="book.totalCopies==book.issued">This book has been exceeded its issuing limit</div>
+    </mat-card-actions>
+
   </mat-card>
 </div>

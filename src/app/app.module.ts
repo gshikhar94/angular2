@@ -15,7 +15,8 @@ import { BooksDetailComponent } from './books-detail/books-detail.component';
 import { BooksService } from './providers/books.service';
 import { BookIssuingComponent } from './book-issuing/book-issuing.component';
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { MatButtonModule,MatCheckboxModule,MatCardModule,MatListModule,MatInputModule} from "@angular/material";
+import { MatButtonModule,MatCheckboxModule,MatCardModule,MatListModule,MatInputModule,MatMenuModule,MatIconModule,MatToolbarModule,MatFormFieldModule,MatSelectModule,MatOptionModule} from "@angular/material";
+import { ReactiveFormsModule } from "@angular/forms";
 
 export const firebaseConfig = {
   apiKey: "AIzaSyD_bAKxXvW5xwQPrfdNuhOmRcifaBVs9IQ",
@@ -26,7 +27,7 @@ export const firebaseConfig = {
   messagingSenderId: "1062001801091"
 }
 const routes: Routes = [
-  { path: '', component: HomePageComponent },
+  { path: '', redirectTo: 'login',pathMatch:'full' },
   { path: 'login', component: LoginPageComponent },
   { path: 'signup', component: SignupComponent },
   { path: 'bookDetails', component: BooksDetailComponent },
@@ -54,7 +55,14 @@ const routes: Routes = [
     MatCheckboxModule,
     MatCardModule,
     MatListModule,
-    MatInputModule
+    MatInputModule,
+    MatMenuModule,
+    MatIconModule,
+    MatToolbarModule,
+    MatSelectModule,
+    MatFormFieldModule,
+    ReactiveFormsModule,
+    MatOptionModule
   ],
   providers: [AuthService, AngularFireDatabase, BooksService],
   bootstrap: [AppComponent]

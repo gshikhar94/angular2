@@ -5,12 +5,14 @@ import { AngularFireDatabase, AngularFireObject } from "angularfire2/database";
 import { book } from "../book";
 import { Observable } from "rxjs/Observable";
 import { $ } from 'protractor';
+import { Users } from "../Users";
+import { AuthService } from "../providers/auth.service";
 
 @Injectable()
 export class BooksService {
   book: book;
   item: Observable<book>;
-  constructor(public af: AngularFireAuth, public database: AngularFireDatabase) {
+  constructor(public af: AngularFireAuth, public database: AngularFireDatabase,public authService:AuthService) {
 
   }
 
@@ -22,10 +24,27 @@ export class BooksService {
     item.forEach(value => {
       value.filter((val, index, arr) => {
         this.database.object<book>('/Books/' + id).
-        update({
-          issued: val.issued + 1,
-        })
+          update({
+            issued: val.issued + 1,
+          })
       })
     });
+    console.log(this.database.list<Users>('/Users/').query.ref.key);
+  }
+
+  likeBook(id: number) {
+    let book = this.database.list<book>('/Books/'+id).valueChanges();
+    book.forEach(books => {
+      books.filter(book => {
+        this.database.object<book>('/Books/' + id).
+          update({
+            likes: book.likes + 1,
+          })
+      })
+    });
+    console.log(this.authService.af.auth.currentUser.uid);
+  }
+  pushUserRecord(){
+    console.log(this.authService.af.auth.currentUser.uid);
   }
 }
